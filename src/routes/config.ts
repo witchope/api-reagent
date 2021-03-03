@@ -33,10 +33,10 @@ const menus: {
     menus: [
         // 菜单相关路由
         {
-            key: '/app/dashboard/index',
+            key: '/app/request',
             title: '首页',
             icon: DashboardOutlined,
-            component: 'Dashboard',
+            component: 'Request',
             login: false,
         },
         {

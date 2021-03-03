@@ -9,8 +9,7 @@ import classNames from 'classnames';
 const {Header} = Layout;
 const MenuItemGroup = Menu.ItemGroup;
 
-type HeaderProps = {
-};
+type HeaderProps = {};
 
 /**
  *
@@ -20,11 +19,13 @@ type HeaderProps = {
 const HeadBar: React.FC<HeaderProps> = props => {
 
   return (
-    <Header className={classNames('nav-bar')}>
-      <MenuFoldOutlined
-        className="menu-toggle"
-      />
-    </Header>
+    <div style={{minHeight: '12vh'}}>
+      <Header className={classNames('nav-bar')}>
+        <MenuFoldOutlined
+          className="menu-toggle"
+        />
+      </Header>
+    </div>
   );
 };
 

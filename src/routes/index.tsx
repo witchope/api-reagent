@@ -63,12 +63,14 @@ const CRouter: React.FC<CRouterProps> = props => {
   };
 
   return (
-    <Router>
-      <Switch>
-        {Object.keys(routesConfig).map(key => createRoute(key))}
-        <Route render={() => <Redirect to="/404"/>}/>
-      </Switch>
-    </Router>
+    <div style={{minHeight: "80vh"}}>
+      <Router>
+        <Switch>
+          {Object.keys(routesConfig).map(key => createRoute(key))}
+          <Route render={() => <Redirect to="/404"/>}/>
+        </Switch>
+      </Router>
+    </div>
   );
 };
 
