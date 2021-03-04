@@ -3,14 +3,18 @@ import './App.less';
 import {Layout} from "antd";
 import SideBar from "./components/layout/SideBar";
 import HeadBar from "./components/layout/Header";
-import Routes from './routes';
+import TabPage from "./components/page/TabPage";
+import FootBar from "./components/layout/FootBar";
 
 function App() {
   return (
     <div className="App">
       <Layout>
         <SideBar/>
-        <Layout style={{flexDirection: 'column'}}>
+        <Layout style={{
+          flexDirection: 'column',
+          background: 'white'
+        }}>
           <HeadBar/>
           <Layout.Content
             style={{
@@ -18,16 +22,12 @@ function App() {
               overflow: 'initial',
               flex: '1 1 0',
               minHeight: 'auto',
+              background: 'white'
             }}
           >
-            <Routes auth={{}}/>
+            <TabPage/>
           </Layout.Content>
-          <Layout.Footer style={{textAlign: 'center', background: '#f0f2f5'}}>
-            API-REAGENT WebUI ©{new Date().getFullYear()} Power By
-            <a href="mailto:guoxiaohan@rjmart.cn">
-              &nbsp;guoxiaohan@rjmart.cn
-            </a>
-          </Layout.Footer>
+          <FootBar/>
         </Layout>
       </Layout>
     </div>

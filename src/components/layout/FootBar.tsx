@@ -1,17 +1,19 @@
-import React, {memo} from 'react';
+import React from 'react';
 import {Layout} from 'antd';
+import styles from './FootBar.module.less';
 
 const {Footer} = Layout;
 
-type SideBarProps = {
+type FootBarProps = {
   popoverHide?: () => void;
   collapsed?: boolean;
 };
 
-const SideBar: React.FC<SideBarProps> = (props) => {
+const FootBar: React.FC<FootBarProps> = (props) => {
   return (
-    <div style={{minHeight: '10vh'}}>
+    <div className={styles.footer}>
       <Footer>
+        API-REAGENT WebUI ©{new Date().getFullYear()} Power By
         <a href="mailto:guoxiaohan@rjmart.cn">
           &nbsp;guoxiaohan@rjmart.cn
         </a>
@@ -20,4 +22,4 @@ const SideBar: React.FC<SideBarProps> = (props) => {
   );
 };
 
-export default memo(SideBar);
+export default FootBar;
