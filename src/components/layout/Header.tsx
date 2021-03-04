@@ -19,7 +19,7 @@ type HeaderProps = {};
 const HeadBar: React.FC<HeaderProps> = props => {
 
   return (
-    <div style={{minHeight: '11vh'}}>
+    <div style={{minHeight: '8vh'}}>
       <Header className={classNames('nav-bar')} style={{background: '#f0f0f0', borderBottom: '1px #d8d8d8 solid'}}>
       </Header>
     </div>

@@ -46,6 +46,7 @@
     "jest-resolve": "26.6.0",
     "jest-watch-typeahead": "0.6.1",
     "mini-css-extract-plugin": "0.11.3",
+    "monaco-editor-webpack-plugin": "^3.0.0",
     "optimize-css-assets-webpack-plugin": "5.0.4",
     "pnp-webpack-plugin": "1.6.4",
     "postcss-flexbugs-fixes": "4.2.1",
@@ -86,6 +87,7 @@
     "query-string": "^6.10.1",
     "react-activation": "^0.8.1",
     "react-helmet": "^6.1.0",
+    "react-monaco-editor": "^0.39.1",
     "react-router-dom": "^5.2.0"
   },
   "scripts": {

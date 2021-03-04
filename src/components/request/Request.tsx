@@ -1,12 +1,15 @@
 import React, {memo} from 'react';
-import {Col, Dropdown, Input, Menu, Row, Select, Tabs} from "antd";
-import EditableTable from './EditableTable';
-import styles from './Request.module.less';
+import {Col, Dropdown, Input, Menu, Row, Select} from "antd";
+import ParamTab from "./ParamTab";
 
-const {TabPane} = Tabs;
+const {Option} = Select;
 
+/**
+ * API Request
+ *
+ * @constructor
+ */
 const Request: React.FC = () => {
-  const {Option} = Select;
 
   function handleMenuClick(e: any) {
     console.log('click', e);
@@ -24,10 +27,6 @@ const Request: React.FC = () => {
     </Menu>
   );
 
-  function callback(key: any) {
-    console.log(key);
-  }
-
   return <div>
     <Row gutter={8}>
       <Col span={21}>
@@ -39,19 +38,7 @@ const Request: React.FC = () => {
     </Row>
     <Row gutter={8}>
       <Col span={24}>
-        <Tabs defaultActiveKey="1" onChange={callback}>
-          <TabPane tab="Params" key="1">
-            <EditableTable/>
-          </TabPane>
-          <TabPane tab="Headers" key="2">
-            <EditableTable/>
-          </TabPane>
-          <TabPane tab="Body" key="3">
-            <div className={styles.title}>
-              test
-            </div>
-          </TabPane>
-        </Tabs>
+        <ParamTab/>
       </Col>
     </Row>
   </div>

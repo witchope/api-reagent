@@ -1,8 +1,16 @@
 import React, {useContext, useState, useEffect, useRef} from 'react';
 import {Table, Input, Button, Popconfirm, Form, Row, Col} from 'antd';
 import {FormInstance} from 'antd/lib/form';
+import styles from "./Request.module.less";
+import {DashboardOutlined} from "@ant-design/icons";
 
 const EditableContext = React.createContext<FormInstance<any> | null>(null);
+const DataSourceContext = React.createContext<dtType>({});
+
+type dtType = {
+  dataSource?: DataType[]
+  add?: () => void
+}
 
 interface Item {
   key: string;
@@ -47,6 +55,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
   const [editing, setEditing] = useState(false);
   const inputRef = useRef<Input>(null);
   const form = useContext(EditableContext)!;
+  const {add} = useContext(DataSourceContext)!;
 
   useEffect(() => {
     if (editing) {
@@ -84,7 +93,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
           },
         ]}
       >
-        <Input ref={inputRef} onPressEnter={save} onBlur={save}/>
+        <Input ref={inputRef} size="small"/>
       </Form.Item>
   }
 
@@ -157,9 +166,9 @@ class EditableTable extends React.Component<EditableTableProps, EditableTableSta
     const {count, dataSource} = this.state;
     const newData: DataType = {
       key: count,
-      dataKey: `Edward King ${count}`,
-      value: '32',
-      description: `London, Park Lane no. ${count}`,
+      dataKey: '',
+      value: '',
+      description: '',
     };
     this.setState({
       dataSource: [...dataSource, newData],
@@ -205,20 +214,24 @@ class EditableTable extends React.Component<EditableTableProps, EditableTableSta
       <div>
         <Row>
           <Col span={1}>
-            <Button onClick={this.handleAdd} type="primary" style={{marginBottom: 16}}>
+            <Button onClick={this.handleAdd} type="primary" style={{marginBottom: 10}} size={"small"}>
               Add
             </Button>
           </Col>
         </Row>
-        <Table
-          size={'small'}
-          pagination={false}
-          components={components}
-          rowClassName={() => 'editable-row'}
-          bordered
-          dataSource={dataSource}
-          columns={columns as ColumnTypes}
-        />
+        <div style={{textAlign: "center"}}>
+          <DataSourceContext.Provider value={{dataSource, add: () => this.handleAdd()}}>
+            <Table
+              size="small"
+              pagination={false}
+              components={components}
+              rowClassName={() => 'editable-row'}
+              bordered
+              dataSource={dataSource}
+              columns={columns as ColumnTypes}
+            />
+          </DataSourceContext.Provider>
+        </div>
       </div>
     );
   }
