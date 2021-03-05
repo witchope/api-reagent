@@ -57,7 +57,7 @@ const TabPage: React.FC<TabPageProps> = props => {
   };
 
   return (
-    <div style={{minHeight: "80vh"}}>
+    <div style={{minHeight: "88vh"}}>
       <Tabs
         type="editable-card"
         activeKey={activeKey}

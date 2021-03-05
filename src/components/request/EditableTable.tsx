@@ -145,7 +145,7 @@ class EditableTable extends React.Component<EditableTableProps, EditableTableSta
         render: (_, record: any) =>
           this.state.dataSource.length >= 1 ? (
             <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.key)}>
-              <a>Delete</a>
+              <a>&nbsp;&nbsp;Delete</a>
             </Popconfirm>
           ) : null,
       },
@@ -219,7 +219,7 @@ class EditableTable extends React.Component<EditableTableProps, EditableTableSta
             </Button>
           </Col>
         </Row>
-        <div style={{textAlign: "center"}}>
+        <div className={styles.paramTable}>
           <DataSourceContext.Provider value={{dataSource, add: () => this.handleAdd()}}>
             <Table
               size="small"

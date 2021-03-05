@@ -17,10 +17,14 @@ const ParamTab: React.FC<ParamTabProps> = props => {
   return <div className={styles.param}>
     <Tabs defaultActiveKey="1" onChange={callback}>
       <TabPane tab="Params" key="1">
-        <EditableTable/>
+        <div className={styles.panes}>
+          <EditableTable/>
+        </div>
       </TabPane>
       <TabPane tab="Headers" key="2">
-        <EditableTable/>
+        <div className={styles.panes}>
+          <EditableTable/>
+        </div>
       </TabPane>
       <TabPane tab="Body" key="3">
         <div className={styles.title}>

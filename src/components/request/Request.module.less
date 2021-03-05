@@ -3,13 +3,15 @@
 }
 
 .param {
-  :global {
-    .ant-tabs-content-holder {
-      height: 350px;
-      overflow: auto;
-      border-bottom: 1px solid #d8d8d8;
-    }
-  }
+  height: 400px;
+  border-bottom: 1px solid #d8d8d8;
+  padding-bottom: 10px;
+}
+
+.panes {
+  height: 350px;
+  overflow: scroll;
+  border-bottom: 1px solid #d8d8d8;
 }
 
 .bodyTab {
@@ -18,4 +20,20 @@
 }
 
 .editable-row {
+}
+
+.paramTable {
+
+  :global {
+    .ant-table-tbody {
+      .ant-table-cell {
+        padding: 0 !important;
+      }
+
+      input {
+        height: 32px;
+        border: 1px solid #ffffff;
+      }
+    }
+  }
 }
