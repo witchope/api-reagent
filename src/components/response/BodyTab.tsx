@@ -1,13 +1,12 @@
 import {Radio} from "antd";
 import React, {useState} from "react";
 import MonacoEditor from 'react-monaco-editor';
-import EditableTable from "./EditableTable";
 
 type BodyTabProps = {}
 
 const BodyTab: React.FC<BodyTabProps> = props => {
   const [editorValue, setEditorValue] = useState<string>("");
-  const [currentRadio, setCurrentRadio] = useState<string>("none");
+  const [currentRadio, setCurrentRadio] = useState<string>("Pretty");
   const [lang, setLang] = useState<string>("json");
 
   const beautify = (val: string) => {
@@ -21,13 +20,12 @@ const BodyTab: React.FC<BodyTabProps> = props => {
 
   const displayTab = () => {
     switch (currentRadio) {
-      case 'none':
+      case 'Raw':
         return <div style={{textAlign: 'center'}}>This request does not have a body!</div>
-      case 'json':
-      case 'xml':
+      case 'Pretty':
         return (<div style={{border: '1px solid #d8d8d8', borderRadius: "5px"}}>
           < MonacoEditor
-            height="190"
+            height="198"
             language={lang}
             theme="vs"
             value={editorValue}
@@ -35,6 +33,7 @@ const BodyTab: React.FC<BodyTabProps> = props => {
               setEditorValue(value);
             }}
             options={{
+              readOnly: true,
               selectOnLineNumbers: true,
               language: "json",
               minimap: {
@@ -43,30 +42,16 @@ const BodyTab: React.FC<BodyTabProps> = props => {
             }}
           />
         </div>)
-      case 'form-data':
-      case 'x-www-form-urlencoded':
-        return <EditableTable/>
+      case 'Preview':
     }
   }
 
   return <div>
-    <Radio.Group
-      defaultValue={1}
-      style={{marginBottom: 10}}
-      onChange={(e) => {
-        let value = e.target.value;
-        if (value === 'xml' || value == 'json') {
-          setLang(value);
-        }
-        setCurrentRadio(value)
-      }}>
-      <Radio value="none">none</Radio>
-      <Radio value="form-data">form-data</Radio>
-      <Radio value="x-www-form-urlencoded">x-www-form-urlencoded</Radio>
-      <Radio value="json">json</Radio>
-      <Radio value="xml">xml</Radio>
+    <Radio.Group defaultValue="Pretty" buttonStyle="solid" style={{marginBottom: 10}}>
+      <Radio.Button value="Pretty">Pretty</Radio.Button>
+      <Radio.Button value="Raw">Raw</Radio.Button>
+      <Radio.Button value="Preview">Preview</Radio.Button>
     </Radio.Group>
-    <a onClick={() => beautify(editorValue)}><b>Beautify</b></a>
     <div style={{borderTop: '1px solid #d8d8d8'}}>
       {displayTab()}
     </div>

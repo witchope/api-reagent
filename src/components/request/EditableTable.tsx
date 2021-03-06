@@ -1,10 +1,9 @@
-import React, {useContext, useState, useEffect, useRef} from 'react';
-import {Table, Input, Button, Popconfirm, Form, Row, Col} from 'antd';
-import {FormInstance} from 'antd/lib/form';
+import React, {useContext, useState, useEffect, useRef, SyntheticEvent} from 'react';
+import {Table, Input, Form} from 'antd';
 import styles from "./Request.module.less";
-import {DashboardOutlined} from "@ant-design/icons";
+import {CloseOutlined} from '@ant-design/icons';
 
-const EditableContext = React.createContext<FormInstance<any> | null>(null);
+const EditableContext = React.createContext<any>(null);
 const DataSourceContext = React.createContext<dtType>({});
 
 type dtType = {
@@ -25,9 +24,10 @@ interface EditableRowProps {
 
 const EditableRow: React.FC<EditableRowProps> = ({index, ...props}) => {
   const [form] = Form.useForm();
+  const [untouched, setUntouched] = useState(true);
   return (
     <Form form={form} component={false}>
-      <EditableContext.Provider value={form}>
+      <EditableContext.Provider value={{form, untouched, setUntouched}}>
         <tr {...props} />
       </EditableContext.Provider>
     </Form>
@@ -43,62 +43,47 @@ interface EditableCellProps {
   handleSave: (record: Item) => void;
 }
 
-const EditableCell: React.FC<EditableCellProps> = ({
-                                                     title,
-                                                     editable,
-                                                     children,
-                                                     dataIndex,
-                                                     record,
-                                                     handleSave,
-                                                     ...restProps
-                                                   }) => {
-  const [editing, setEditing] = useState(false);
-  const inputRef = useRef<Input>(null);
-  const form = useContext(EditableContext)!;
-  const {add} = useContext(DataSourceContext)!;
+const EditableCell: React.FC<EditableCellProps> =
+  ({
+     title,
+     editable,
+     children,
+     dataIndex,
+     record,
+     handleSave,
+     ...restProps
+   }) => {
+    const inputRef = useRef<Input>(null);
+    const {untouched, setUntouched} = useContext(EditableContext)!;
+    const {add} = useContext(DataSourceContext)!;
 
-  useEffect(() => {
-    if (editing) {
-      inputRef.current!.focus();
+    const input = (e: SyntheticEvent) => {
+      if (untouched) {
+        add ? add() : console.log("add not ready")
+      }
+      setUntouched(false);
     }
-  }, [editing]);
 
-  const toggleEdit = () => {
-    setEditing(!editing);
-    form.setFieldsValue({[dataIndex]: record[dataIndex]});
-  };
+    let childNode = children;
 
-  const save = async () => {
-    try {
-      const values = await form.validateFields();
-
-      toggleEdit();
-      handleSave({...record, ...values});
-    } catch (errInfo) {
-      console.log('Save failed:', errInfo);
+    if (editable) {
+      childNode =
+        <Form.Item
+          style={{margin: 0}}
+          name={dataIndex}
+          rules={[
+            {
+              required: false,
+              message: `${title} is required.`,
+            },
+          ]}
+        >
+          <Input ref={inputRef} size="small" onInput={input} placeholder={dataIndex} autoComplete='off'/>
+        </Form.Item>
     }
+
+    return <td {...restProps}>{childNode}</td>;
   };
-
-  let childNode = children;
-
-  if (editable) {
-    childNode =
-      <Form.Item
-        style={{margin: 0}}
-        name={dataIndex}
-        rules={[
-          {
-            required: false,
-            message: `${title} is required.`,
-          },
-        ]}
-      >
-        <Input ref={inputRef} size="small"/>
-      </Form.Item>
-  }
-
-  return <td {...restProps}>{childNode}</td>;
-};
 
 type EditableTableProps = Parameters<typeof Table>[0];
 
@@ -117,6 +102,7 @@ interface EditableTableState {
 type ColumnTypes = Exclude<EditableTableProps['columns'], undefined>;
 
 class EditableTable extends React.Component<EditableTableProps, EditableTableState> {
+
   columns: (ColumnTypes[number] & { editable?: boolean; dataIndex: string })[];
 
   constructor(props: EditableTableProps) {
@@ -140,15 +126,15 @@ class EditableTable extends React.Component<EditableTableProps, EditableTableSta
         editable: true,
       },
       {
-        title: 'OPERATION',
+        title: '',
         dataIndex: 'operation',
-        render: (_, record: any) =>
-          this.state.dataSource.length >= 1 ? (
-            <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.key)}>
-              <a>&nbsp;&nbsp;Delete</a>
-            </Popconfirm>
-          ) : null,
-      },
+        width: '3%',
+        render: (_, record: any, index: number) => {
+          return index !== this.state.dataSource.length - 1 ? (
+            <a onClick={() => this.handleDelete(record.key)}>&nbsp;&nbsp;<CloseOutlined/></a>
+          ) : null;
+        }
+      }
     ];
 
     this.state = {
@@ -195,6 +181,7 @@ class EditableTable extends React.Component<EditableTableProps, EditableTableSta
         cell: EditableCell,
       },
     };
+
     const columns = this.columns.map(col => {
       if (!col.editable) {
         return col;
@@ -210,15 +197,9 @@ class EditableTable extends React.Component<EditableTableProps, EditableTableSta
         }),
       };
     });
+
     return (
       <div>
-        <Row>
-          <Col span={1}>
-            <Button onClick={this.handleAdd} type="primary" style={{marginBottom: 10}} size={"small"}>
-              Add
-            </Button>
-          </Col>
-        </Row>
         <div className={styles.paramTable}>
           <DataSourceContext.Provider value={{dataSource, add: () => this.handleAdd()}}>
             <Table

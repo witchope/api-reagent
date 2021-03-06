@@ -1,6 +1,10 @@
 import React, {memo} from 'react';
 import {Col, Dropdown, Input, Menu, Row, Select} from "antd";
 import ParamTab from "./ParamTab";
+import {
+  DownOutlined
+} from '@ant-design/icons';
+import Response from "../response/Response";
 
 const {Option} = Select;
 
@@ -33,12 +37,17 @@ const Request: React.FC = () => {
         <Input addonBefore={selectBefore} defaultValue="mysite"/>
       </Col>
       <Col span={1}>
-        <Dropdown.Button type={"primary"} overlay={menu}>发送</Dropdown.Button>
+        <Dropdown.Button type={"primary"} overlay={menu} icon={<DownOutlined/>}>发送</Dropdown.Button>
       </Col>
     </Row>
     <Row gutter={8}>
       <Col span={24}>
         <ParamTab/>
+      </Col>
+    </Row>
+    <Row gutter={8}>
+      <Col span={24}>
+        <Response/>
       </Col>
     </Row>
   </div>
