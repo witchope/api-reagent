@@ -9,20 +9,22 @@ import FootBar from "./components/layout/FootBar";
 function App() {
   return (
     <div className="App">
-      <Layout>
+      <Layout style={{
+        height: "100vh",
+        overflow: "hidden"
+      }}>
         <SideBar/>
         <Layout style={{
           flexDirection: 'column',
-          background: 'white'
+          background: '#fff'
         }}>
           <HeadBar/>
           <Layout.Content
             style={{
-              margin: '0 16px',
               overflow: 'initial',
               flex: '1 1 0',
               minHeight: 'auto',
-              background: 'white'
+              background: '#fff'
             }}
           >
             <TabPage/>

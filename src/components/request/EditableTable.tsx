@@ -54,14 +54,14 @@ const EditableCell: React.FC<EditableCellProps> =
      ...restProps
    }) => {
     const inputRef = useRef<Input>(null);
-    const {untouched, setUntouched} = useContext(EditableContext)!;
+    const {form, untouched, setUntouched} = useContext(EditableContext)!;
     const {add} = useContext(DataSourceContext)!;
 
     const input = (e: SyntheticEvent) => {
       if (untouched) {
         add ? add() : console.log("add not ready")
+        setUntouched(false);
       }
-      setUntouched(false);
     }
 
     let childNode = children;
@@ -71,14 +71,14 @@ const EditableCell: React.FC<EditableCellProps> =
         <Form.Item
           style={{margin: 0}}
           name={dataIndex}
-          rules={[
-            {
-              required: false,
-              message: `${title} is required.`,
-            },
-          ]}
         >
-          <Input ref={inputRef} size="small" onInput={input} placeholder={dataIndex} autoComplete='off'/>
+          <Input
+            ref={inputRef}
+            size="small"
+            onInput={input}
+            placeholder={dataIndex}
+            autoComplete='off'
+          />
         </Form.Item>
     }
 
@@ -111,7 +111,7 @@ class EditableTable extends React.Component<EditableTableProps, EditableTableSta
     this.columns = [
       {
         title: 'KEY',
-        dataIndex: 'dataKey',
+        dataIndex: 'key',
         width: '30%',
         editable: true,
       },

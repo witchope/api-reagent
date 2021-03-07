@@ -1,6 +1,10 @@
 .title {
 }
 
+.selectBefore {
+  width: 110px;
+}
+
 .param {
   height: 300px;
   border-bottom: 1px solid #d8d8d8;
@@ -8,8 +12,8 @@
 }
 
 .panes {
-  height: 300px;
-  overflow: scroll;
+  height: 230px;
+  overflow: auto;
   //border-bottom: 1px solid #d8d8d8;
 }
 
@@ -34,4 +38,18 @@
       }
     }
   }
+}
+
+.sendButton {
+
+  :global {
+    .ant-btn-primary {
+      background: #4372e6;
+      border-color: #4372e6;
+      border-left-color: #3e6ad6 !important;
+      border-right-color: #3e6ad6 !important;
+    }
+
+  }
+
 }

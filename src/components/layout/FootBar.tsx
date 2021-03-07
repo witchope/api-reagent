@@ -13,7 +13,7 @@ const FootBar: React.FC<FootBarProps> = (props) => {
   return (
     <div className={styles.footer}>
       <Footer>
-        API-REAGENT WebUI ©{new Date().getFullYear()} Power By
+        <b>API-REAGENT</b>©{new Date().getFullYear()} Power By
         <a href="mailto:guoxiaohan@rjmart.cn">
           &nbsp;guoxiaohan@rjmart.cn
         </a>

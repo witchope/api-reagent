@@ -3,12 +3,21 @@ import {Tabs} from "antd";
 import EditableTable from "./EditableTable";
 import styles from "./Request.module.less";
 import BodyTab from "./BodyTab";
+import {FormParameters, RequestBody} from "./Request";
 
-type ParamTabProps = {}
+type ParamTabProps = {
+  requestBody: RequestBody
+  setRequestBody: (req: RequestBody) => void
+}
 
 const {TabPane} = Tabs;
 
 const ParamTab: React.FC<ParamTabProps> = props => {
+
+  const updateBody = (jsonParameter: string, formParameters: FormParameters[]) => {
+    console.log("json", jsonParameter);
+    console.log("form", formParameters);
+  }
 
   function callback(key: any) {
     console.log(key);
@@ -28,7 +37,7 @@ const ParamTab: React.FC<ParamTabProps> = props => {
       </TabPane>
       <TabPane tab="Body" key="3">
         <div className={styles.title}>
-          <BodyTab/>
+          <BodyTab setParameters={updateBody}/>
         </div>
       </TabPane>
     </Tabs>

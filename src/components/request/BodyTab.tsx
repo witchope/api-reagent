@@ -2,10 +2,14 @@ import {Radio} from "antd";
 import React, {useState} from "react";
 import MonacoEditor from 'react-monaco-editor';
 import EditableTable from "./EditableTable";
+import {FormParameters} from "./Request";
 
-type BodyTabProps = {}
+type BodyTabProps = {
+  setParameters: (jsonParameter: string, formParameters: FormParameters[]) => void
+}
 
 const BodyTab: React.FC<BodyTabProps> = props => {
+  const {setParameters} = props;
   const [editorValue, setEditorValue] = useState<string>("");
   const [currentRadio, setCurrentRadio] = useState<string>("none");
   const [lang, setLang] = useState<string>("json");
@@ -33,6 +37,7 @@ const BodyTab: React.FC<BodyTabProps> = props => {
             value={editorValue}
             onChange={(value, e) => {
               setEditorValue(value);
+              setParameters(value, []);
             }}
             options={{
               selectOnLineNumbers: true,
@@ -51,7 +56,7 @@ const BodyTab: React.FC<BodyTabProps> = props => {
 
   return <div>
     <Radio.Group
-      defaultValue={1}
+      defaultValue="none"
       style={{marginBottom: 10}}
       onChange={(e) => {
         let value = e.target.value;

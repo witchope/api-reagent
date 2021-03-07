@@ -21,7 +21,7 @@ const TabPage: React.FC<TabPageProps> = props => {
     setNewTabIndex(newTabIndex + 1);
     const activeKey = `newTab${newTabIndex}`;
     const newPanes = [...panes];
-    newPanes.push({title: 'New Tab', content: <Request/>, key: activeKey});
+    newPanes.push({title: 'New Request', content: <Request/>, key: activeKey});
     setPanes(newPanes);
     setActiveKey(activeKey)
   };
@@ -57,15 +57,23 @@ const TabPage: React.FC<TabPageProps> = props => {
   };
 
   return (
-    <div style={{minHeight: "88vh"}}>
+    <div>
       <Tabs
+        style={{marginTop: 1}}
         type="editable-card"
         activeKey={activeKey}
         onEdit={onEdit}
         onChange={onChange}
       >
         {panes.map(pane => (
-          <Tabs.TabPane tab={pane.title} key={pane.key} closable={pane.closable}>
+          <Tabs.TabPane
+            style={{
+              paddingLeft: 10,
+              paddingRight: 10
+            }}
+            tab={pane.title}
+            key={pane.key}
+            closable={pane.closable}>
             {pane.content}
           </Tabs.TabPane>
         ))}

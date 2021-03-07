@@ -155,7 +155,7 @@ module.exports = function (webpackEnv) {
           loader: require.resolve(preProcessor),
           options: {
             sourceMap: true,
-            modifyVars: { '@primary-color': '#097BED' },
+            modifyVars: { '@primary-color': '#f07544' },
             javascriptEnabled: true,
           },
         }
