@@ -14,8 +14,8 @@ type dtType = {
 interface Item {
   key: string;
   name: string;
-  age: string;
-  address: string;
+  value: string;
+  description: string;
 }
 
 interface EditableRowProps {
@@ -57,12 +57,27 @@ const EditableCell: React.FC<EditableCellProps> =
     const {form, untouched, setUntouched} = useContext(EditableContext)!;
     const {add} = useContext(DataSourceContext)!;
 
+    useEffect(() => {
+      if (record){
+        form.setFieldsValue({[dataIndex]: record[dataIndex]});
+      }
+    }, [dataIndex, record]);
+
     const input = (e: SyntheticEvent) => {
       if (untouched) {
         add ? add() : console.log("add not ready")
         setUntouched(false);
       }
     }
+
+    const save = async () => {
+      try {
+        const values = await form.validateFields();
+        handleSave({...record, ...values});
+      } catch (errInfo) {
+        console.log('Save failed:', errInfo);
+      }
+    };
 
     let childNode = children;
 
@@ -76,6 +91,7 @@ const EditableCell: React.FC<EditableCellProps> =
             ref={inputRef}
             size="small"
             onInput={input}
+            onBlur={save}
             placeholder={dataIndex}
             autoComplete='off'
           />
@@ -85,21 +101,24 @@ const EditableCell: React.FC<EditableCellProps> =
     return <td {...restProps}>{childNode}</td>;
   };
 
-type EditableTableProps = Parameters<typeof Table>[0];
+type EditableTableProps = {
+  dataSource: DataType[];
+  setDataSource: (data: DataType[]) => void;
+  count: number;
+  setCount: (count: number) => void;
+};
 
-interface DataType {
+export interface DataType {
   key: React.Key;
-  dataKey: string;
+  name: string;
   value: string;
   description: string;
 }
 
 interface EditableTableState {
-  dataSource: DataType[];
-  count: number;
 }
 
-type ColumnTypes = Exclude<EditableTableProps['columns'], undefined>;
+type ColumnTypes = Exclude<Parameters<typeof Table>[0]['columns'], undefined>;
 
 class EditableTable extends React.Component<EditableTableProps, EditableTableState> {
 
@@ -110,8 +129,8 @@ class EditableTable extends React.Component<EditableTableProps, EditableTableSta
 
     this.columns = [
       {
-        title: 'KEY',
-        dataIndex: 'key',
+        title: 'NAME',
+        dataIndex: 'name',
         width: '30%',
         editable: true,
       },
@@ -130,7 +149,7 @@ class EditableTable extends React.Component<EditableTableProps, EditableTableSta
         dataIndex: 'operation',
         width: '3%',
         render: (_, record: any, index: number) => {
-          return index !== this.state.dataSource.length - 1 ? (
+          return index !== this.props.dataSource.length - 1 ? (
             <a onClick={() => this.handleDelete(record.key)}>&nbsp;&nbsp;<CloseOutlined/></a>
           ) : null;
         }
@@ -138,21 +157,21 @@ class EditableTable extends React.Component<EditableTableProps, EditableTableSta
     ];
 
     this.state = {
-      dataSource: [{key: '', dataKey: '', value: '', description: ''}],
+      dataSource: [{key: -1, name: '', value: '', description: ''}],
       count: 0,
     };
   }
 
   handleDelete = (key: React.Key) => {
-    const dataSource = [...this.state.dataSource];
+    const dataSource = [...this.props.dataSource];
     this.setState({dataSource: dataSource.filter(item => item.key !== key)});
   };
 
   handleAdd = () => {
-    const {count, dataSource} = this.state;
+    const {count, dataSource} = this.props;
     const newData: DataType = {
       key: count,
-      dataKey: '',
+      name: '',
       value: '',
       description: '',
     };
@@ -163,7 +182,7 @@ class EditableTable extends React.Component<EditableTableProps, EditableTableSta
   };
 
   handleSave = (row: DataType) => {
-    const newData = [...this.state.dataSource];
+    const newData = [...this.props.dataSource];
     const index = newData.findIndex(item => row.key === item.key);
     const item = newData[index];
     newData.splice(index, 1, {
@@ -174,7 +193,7 @@ class EditableTable extends React.Component<EditableTableProps, EditableTableSta
   };
 
   render() {
-    const {dataSource} = this.state;
+    const {dataSource} = this.props;
     const components = {
       body: {
         row: EditableRow,
@@ -206,7 +225,6 @@ class EditableTable extends React.Component<EditableTableProps, EditableTableSta
               size="small"
               pagination={false}
               components={components}
-              rowClassName={() => 'editable-row'}
               bordered
               dataSource={dataSource}
               columns={columns as ColumnTypes}

@@ -51,8 +51,8 @@ const Request: React.FC = () => {
 
   const selectBefore = (
     <Select defaultValue="GET" className={styles.selectBefore}>
-      <Option value="POST"><span style={{color: '#faba3c'}}>POST</span></Option>
-      <Option value="GET"><span style={{color: '#32c82f'}}>GET</span></Option>
+      <Option value="POST"><b>POST</b></Option>
+      <Option value="GET"><b>GET</b></Option>
     </Select>
   );
   const menu = (

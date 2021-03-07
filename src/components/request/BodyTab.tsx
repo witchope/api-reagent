@@ -1,7 +1,7 @@
 import {Radio} from "antd";
 import React, {useState} from "react";
 import MonacoEditor from 'react-monaco-editor';
-import EditableTable from "./EditableTable";
+import EditableTable, {DataType} from "./EditableTable";
 import {FormParameters} from "./Request";
 
 type BodyTabProps = {
@@ -13,6 +13,8 @@ const BodyTab: React.FC<BodyTabProps> = props => {
   const [editorValue, setEditorValue] = useState<string>("");
   const [currentRadio, setCurrentRadio] = useState<string>("none");
   const [lang, setLang] = useState<string>("json");
+  const [count, setCount] = useState<number>(0);
+  const [dataSource, setDataSource] = useState<DataType[]>([{key: -1, name: '', value: '', description: ''}]);
 
   const beautify = (val: string) => {
     try {
@@ -50,7 +52,12 @@ const BodyTab: React.FC<BodyTabProps> = props => {
         </div>)
       case 'form-data':
       case 'x-www-form-urlencoded':
-        return <EditableTable/>
+        return <EditableTable
+          dataSource={dataSource}
+          count={count}
+          setDataSource={setDataSource}
+          setCount={setCount}
+        />
     }
   }
 

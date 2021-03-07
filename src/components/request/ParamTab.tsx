@@ -1,6 +1,5 @@
 import React from "react";
 import {Tabs} from "antd";
-import EditableTable from "./EditableTable";
 import styles from "./Request.module.less";
 import BodyTab from "./BodyTab";
 import {FormParameters, RequestBody} from "./Request";
@@ -27,12 +26,12 @@ const ParamTab: React.FC<ParamTabProps> = props => {
     <Tabs defaultActiveKey="1" onChange={callback}>
       <TabPane tab="Params" key="1">
         <div className={styles.panes}>
-          <EditableTable/>
+          {/*<EditableTable/>*/}
         </div>
       </TabPane>
       <TabPane tab="Headers" key="2">
         <div className={styles.panes}>
-          <EditableTable/>
+          {/*<EditableTable/>*/}
         </div>
       </TabPane>
       <TabPane tab="Body" key="3">
