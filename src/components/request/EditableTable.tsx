@@ -58,8 +58,9 @@ const EditableCell: React.FC<EditableCellProps> =
     const {add} = useContext(DataSourceContext)!;
 
     useEffect(() => {
-      if (record){
+      if (record) {
         form.setFieldsValue({[dataIndex]: record[dataIndex]});
+        // setUntouched(false);
       }
     }, [dataIndex, record]);
 
@@ -155,30 +156,23 @@ class EditableTable extends React.Component<EditableTableProps, EditableTableSta
         }
       }
     ];
-
-    this.state = {
-      dataSource: [{key: -1, name: '', value: '', description: ''}],
-      count: 0,
-    };
   }
 
   handleDelete = (key: React.Key) => {
     const dataSource = [...this.props.dataSource];
-    this.setState({dataSource: dataSource.filter(item => item.key !== key)});
+    this.props.setDataSource(dataSource.filter(item => item.key !== key));
   };
 
   handleAdd = () => {
-    const {count, dataSource} = this.props;
+    const {count, dataSource, setCount, setDataSource} = this.props;
     const newData: DataType = {
       key: count,
       name: '',
       value: '',
       description: '',
     };
-    this.setState({
-      dataSource: [...dataSource, newData],
-      count: count + 1,
-    });
+    setCount(count + 1);
+    setDataSource([...dataSource, newData])
   };
 
   handleSave = (row: DataType) => {
@@ -189,7 +183,7 @@ class EditableTable extends React.Component<EditableTableProps, EditableTableSta
       ...item,
       ...row,
     });
-    this.setState({dataSource: newData});
+    this.props.setDataSource(newData)
   };
 
   render() {
