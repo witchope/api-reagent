@@ -26,39 +26,45 @@ const BodyTab: React.FC<BodyTabProps> = props => {
   }
 
   const displayTab = () => {
-    switch (currentRadio) {
-      case 'none':
-        return <div style={{textAlign: 'center'}}>This request does not have a body!</div>
-      case 'json':
-      case 'xml':
-        return (<div style={{border: '1px solid #d8d8d8', borderRadius: "5px"}}>
-          < MonacoEditor
-            height="190"
-            language={lang}
-            theme="vs"
-            value={editorValue}
-            onChange={(value, e) => {
-              setEditorValue(value);
-              setParameters(value, []);
-            }}
-            options={{
-              selectOnLineNumbers: true,
-              language: "json",
-              minimap: {
-                enabled: false
-              }
-            }}
-          />
-        </div>)
-      case 'form-data':
-      case 'x-www-form-urlencoded':
-        return <EditableTable
+    return <div>
+      <div style={{textAlign: 'center', display: currentRadio === 'none' ? 'block' : 'none'}}>This request does
+        not have a body!
+      </div>
+      {(currentRadio === 'json' || currentRadio === 'xml') && <div style={{
+        border: '1px solid #d8d8d8',
+        borderRadius: "5px",
+      }}
+      >
+        < MonacoEditor
+          height="190"
+          language={lang}
+          theme="vs"
+          value={editorValue}
+          onChange={(value, e) => {
+            setEditorValue(value);
+            setParameters(value, []);
+          }}
+          options={{
+            selectOnLineNumbers: true,
+            minimap: {
+              enabled: false
+            }
+          }}
+        />
+      </div>}
+      <div
+        style={{
+          display: currentRadio === 'form-data' || currentRadio === 'x-www-form-urlencoded' ? 'block' : 'none'
+        }}
+      >
+        <EditableTable
           dataSource={dataSource}
           count={count}
           setDataSource={setDataSource}
           setCount={setCount}
         />
-    }
+      </div>
+    </div>
   }
 
   return <div>
