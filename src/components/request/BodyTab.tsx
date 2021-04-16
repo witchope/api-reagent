@@ -8,6 +8,18 @@ type BodyTabProps = {
   setParameters: (jsonParameter: string, formParameters: FormParameters[]) => void
 }
 
+function dataTypeToFormParameters(data: DataType[]) {
+  const parameters: FormParameters[] = data.map(x => {
+    return {
+      key: `${x.key}`,
+      name: x.name,
+      value: x.value,
+      description: x.description
+    }
+  });
+  return parameters;
+}
+
 const BodyTab: React.FC<BodyTabProps> = props => {
   const {setParameters} = props;
   const [editorValue, setEditorValue] = useState<string>("");
@@ -25,43 +37,50 @@ const BodyTab: React.FC<BodyTabProps> = props => {
     }
   }
 
+  const updateDataSource = (data: DataType[]) => {
+    const parameters = dataTypeToFormParameters(data);
+    setParameters(editorValue, parameters)
+    setDataSource(data)
+  }
+
   const displayTab = () => {
     return <div>
-      <div style={{textAlign: 'center', display: currentRadio === 'none' ? 'block' : 'none'}}>This request does
-        not have a body!
+      <div style={{
+        textAlign: 'center',
+        display: currentRadio === 'none' ? 'block' : 'none'
+      }}>This request does not have a body!
       </div>
       {(currentRadio === 'json' || currentRadio === 'xml') && <div style={{
         border: '1px solid #d8d8d8',
         borderRadius: "5px",
       }}
       >
-        < MonacoEditor
-          height="190"
-          language={lang}
-          theme="vs"
-          value={editorValue}
-          onChange={(value, e) => {
-            setEditorValue(value);
-            setParameters(value, []);
-          }}
-          options={{
-            selectOnLineNumbers: true,
-            minimap: {
-              enabled: false
-            }
-          }}
-        />
+          < MonacoEditor
+              height="190"
+              language={lang}
+              theme="vs"
+              value={editorValue}
+              onChange={(value, e) => {
+                setEditorValue(value);
+                setParameters(value, dataTypeToFormParameters(dataSource));
+              }}
+              options={{
+                selectOnLineNumbers: true,
+                minimap: {
+                  enabled: false
+                }
+              }}
+          />
       </div>}
       <div
         style={{
-          display: currentRadio === 'form-data' || currentRadio === 'x-www-form-urlencoded' ? 'block' : 'none'
+          display: currentRadio === 'form-data' ||
+          currentRadio === 'x-www-form-urlencoded' ? 'block' : 'none'
         }}
       >
         <EditableTable
-          dataSource={dataSource}
-          count={count}
-          setDataSource={setDataSource}
-          setCount={setCount}
+          dataOperation={{dataSource, setDataSource: updateDataSource}}
+          countOperation={{count, setCount}}
         />
       </div>
     </div>
@@ -73,7 +92,7 @@ const BodyTab: React.FC<BodyTabProps> = props => {
       style={{marginBottom: 10}}
       onChange={(e) => {
         let value = e.target.value;
-        if (value === 'xml' || value == 'json') {
+        if (value === 'xml' || value === 'json') {
           setLang(value);
         }
         setCurrentRadio(value)

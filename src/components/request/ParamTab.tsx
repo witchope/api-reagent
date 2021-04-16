@@ -11,13 +11,14 @@ type ParamTabProps = {
 }
 
 const {TabPane} = Tabs;
+const dataSourceDefault: DataType[] = [{key: -1, name: '', value: '', description: ''}]
 
 const ParamTab: React.FC<ParamTabProps> = props => {
 
-  const [count, setCount] = useState<number>(0);
-  const [dataSource, setDataSource] = useState<DataType[]>([{key: -1, name: '', value: '', description: ''}]);
-  const [count1, setCount1] = useState<number>(0);
-  const [dataSource1, setDataSource1] = useState<DataType[]>([{key: -1, name: '', value: '', description: ''}]);
+  const [paramCount, setParamCount] = useState<number>(0);
+  const [paramDataSource, setParamDataSource] = useState<DataType[]>(dataSourceDefault);
+  const [headerDataSource, setHeaderDataSource] = useState<DataType[]>(dataSourceDefault);
+  const [headerCount, setHeaderCount] = useState<number>(0);
 
   const updateBody = (jsonParameter: string, formParameters: FormParameters[]) => {
     console.log("json", jsonParameter);
@@ -33,19 +34,17 @@ const ParamTab: React.FC<ParamTabProps> = props => {
       <TabPane tab="Params" key="1">
         <div className={styles.panes}>
           <EditableTable
-            count={count}
-            setCount={setCount}
-            dataSource={dataSource}
-            setDataSource={setDataSource}/>
+            dataOperation={{dataSource: paramDataSource, setDataSource: setParamDataSource}}
+            countOperation={{count: paramCount, setCount: setParamCount}}
+          />
         </div>
       </TabPane>
       <TabPane tab="Headers" key="2">
         <div className={styles.panes}>
           <EditableTable
-            count={count1}
-            setCount={setCount1}
-            dataSource={dataSource1}
-            setDataSource={setDataSource1}/>
+            dataOperation={{dataSource: headerDataSource, setDataSource: setHeaderDataSource}}
+            countOperation={{count: headerCount, setCount: setHeaderCount}}
+          />
         </div>
       </TabPane>
       <TabPane tab="Body" key="3">

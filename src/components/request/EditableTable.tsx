@@ -62,7 +62,7 @@ const EditableCell: React.FC<EditableCellProps> =
         form.setFieldsValue({[dataIndex]: record[dataIndex]});
         // setUntouched(false);
       }
-    }, [dataIndex, record]);
+    }, [dataIndex, form, record]);
 
     const input = (e: SyntheticEvent) => {
       if (untouched) {
@@ -103,10 +103,14 @@ const EditableCell: React.FC<EditableCellProps> =
   };
 
 type EditableTableProps = {
-  dataSource: DataType[];
-  setDataSource: (data: DataType[]) => void;
-  count: number;
-  setCount: (count: number) => void;
+  dataOperation: {
+    dataSource: DataType[];
+    setDataSource: (data: DataType[]) => void;
+  }
+  countOperation: {
+    count: number;
+    setCount: (count: number) => void;
+  }
 };
 
 export interface DataType {
@@ -150,7 +154,7 @@ class EditableTable extends React.Component<EditableTableProps, EditableTableSta
         dataIndex: 'operation',
         width: '3%',
         render: (_, record: any, index: number) => {
-          return index !== this.props.dataSource.length - 1 ? (
+          return index !== this.props.dataOperation.dataSource.length - 1 ? (
             <a onClick={() => this.handleDelete(record.key)}>&nbsp;&nbsp;<CloseOutlined/></a>
           ) : null;
         }
@@ -159,12 +163,12 @@ class EditableTable extends React.Component<EditableTableProps, EditableTableSta
   }
 
   handleDelete = (key: React.Key) => {
-    const dataSource = [...this.props.dataSource];
-    this.props.setDataSource(dataSource.filter(item => item.key !== key));
+    const dataSource = [...this.props.dataOperation.dataSource];
+    this.props.dataOperation.setDataSource(dataSource.filter(item => item.key !== key));
   };
 
   handleAdd = () => {
-    const {count, dataSource, setCount, setDataSource} = this.props;
+    const {dataOperation: {setDataSource, dataSource}, countOperation: {count, setCount}} = this.props;
     const newData: DataType = {
       key: count,
       name: '',
@@ -176,18 +180,18 @@ class EditableTable extends React.Component<EditableTableProps, EditableTableSta
   };
 
   handleSave = (row: DataType) => {
-    const newData = [...this.props.dataSource];
+    const newData = [...this.props.dataOperation.dataSource];
     const index = newData.findIndex(item => row.key === item.key);
     const item = newData[index];
     newData.splice(index, 1, {
       ...item,
       ...row,
     });
-    this.props.setDataSource(newData)
+    this.props.dataOperation.setDataSource(newData)
   };
 
   render() {
-    const {dataSource} = this.props;
+    const {dataOperation: {dataSource}} = this.props;
     const components = {
       body: {
         row: EditableRow,

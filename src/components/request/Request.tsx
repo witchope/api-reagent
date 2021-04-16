@@ -17,6 +17,7 @@ export type RequestHeader = {
 
 export type FormParameters = {
   key: string;
+  name: string;
   value: string;
   description: string;
 }
