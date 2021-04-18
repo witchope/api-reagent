@@ -2,22 +2,11 @@ import {Radio} from "antd";
 import React, {useState} from "react";
 import MonacoEditor from 'react-monaco-editor';
 import EditableTable, {DataType} from "./EditableTable";
-import {FormParameters} from "./Request";
+import {FormParameter, ParameterType} from "./Request";
+import {dataTypesToParameters} from "./ParamTab";
 
 type BodyTabProps = {
-  setParameters: (jsonParameter: string, formParameters: FormParameters[]) => void
-}
-
-function dataTypeToFormParameters(data: DataType[]) {
-  const parameters: FormParameters[] = data.map(x => {
-    return {
-      key: `${x.key}`,
-      name: x.name,
-      value: x.value,
-      description: x.description
-    }
-  });
-  return parameters;
+  setParameters: (jsonParameter: string, formParameters: FormParameter[], parameterType: ParameterType) => void
 }
 
 const BodyTab: React.FC<BodyTabProps> = props => {
@@ -38,9 +27,8 @@ const BodyTab: React.FC<BodyTabProps> = props => {
   }
 
   const updateDataSource = (data: DataType[]) => {
-    const parameters = dataTypeToFormParameters(data);
-    setParameters(editorValue, parameters)
     setDataSource(data)
+    setParameters(editorValue, dataTypesToParameters(data), currentRadio as "none" | "form-data" | "x-www-form-urlencoded")
   }
 
   const displayTab = () => {
@@ -55,22 +43,22 @@ const BodyTab: React.FC<BodyTabProps> = props => {
         borderRadius: "5px",
       }}
       >
-          < MonacoEditor
-              height="190"
-              language={lang}
-              theme="vs"
-              value={editorValue}
-              onChange={(value, e) => {
-                setEditorValue(value);
-                setParameters(value, dataTypeToFormParameters(dataSource));
-              }}
-              options={{
-                selectOnLineNumbers: true,
-                minimap: {
-                  enabled: false
-                }
-              }}
-          />
+        < MonacoEditor
+          height="190"
+          language={lang}
+          theme="vs"
+          value={editorValue}
+          onChange={(value, e) => {
+            setEditorValue(value);
+            setParameters(value, dataTypesToParameters(dataSource), lang as "json" | "xml");
+          }}
+          options={{
+            selectOnLineNumbers: true,
+            minimap: {
+              enabled: false
+            }
+          }}
+        />
       </div>}
       <div
         style={{
@@ -96,6 +84,7 @@ const BodyTab: React.FC<BodyTabProps> = props => {
           setLang(value);
         }
         setCurrentRadio(value)
+        setParameters(editorValue, dataTypesToParameters(dataSource), value);
       }}>
       <Radio value="none">none</Radio>
       <Radio value="form-data">form-data</Radio>

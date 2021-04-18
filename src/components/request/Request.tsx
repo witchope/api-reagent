@@ -1,35 +1,46 @@
 import React, {memo, useState} from 'react';
 import {Col, Dropdown, Input, Menu, Row, Select} from "antd";
+import {DownOutlined} from '@ant-design/icons';
 import ParamTab from "./ParamTab";
-import {
-  DownOutlined
-} from '@ant-design/icons';
 import Response from "../response/Response";
 import styles from "./Request.module.less"
 
 const {Option} = Select;
 
-export type RequestHeader = {
-  key: string;
-  value: string;
-  description: string;
-}
-
-export type FormParameters = {
+export interface Parameter {
   key: string;
   name: string;
   value: string;
   description: string;
 }
 
+export interface RequestHeader extends Parameter {
+}
+
+export interface UrlParameter extends Parameter {
+}
+
+export interface FormParameter extends Parameter {
+}
+
+export type ParameterType = "none" | "form-data" | "x-www-form-urlencoded" | "json" | "xml"
+
 export type RequestBody = {
   method: "GET" | "POST";
   url: string;
+  urlParameters: UrlParameter[];
   headers: RequestHeader[];
-  parameterType: "none" | "form-data" | "x-www-form-urlencoded" | "json" | "xml";
+  parameterType: ParameterType;
   jsonParameter: string,
-  formParameters: FormParameters[],
+  formParameters: FormParameter[],
 }
+
+const selectBefore = (
+  <Select defaultValue="GET" className={styles.selectBefore}>
+    <Option value="POST"><b>POST</b></Option>
+    <Option value="GET"><b>GET</b></Option>
+  </Select>
+);
 
 /**
  * API Request
@@ -40,6 +51,7 @@ const Request: React.FC = () => {
   const [requestBody, setRequestBody] = useState<RequestBody>({
     method: "GET",
     url: "",
+    urlParameters: [],
     headers: [],
     parameterType: "none",
     jsonParameter: "",
@@ -50,12 +62,10 @@ const Request: React.FC = () => {
     console.log('click', e);
   }
 
-  const selectBefore = (
-    <Select defaultValue="GET" className={styles.selectBefore}>
-      <Option value="POST"><b>POST</b></Option>
-      <Option value="GET"><b>GET</b></Option>
-    </Select>
-  );
+  function handleSendClick() {
+    console.log('click', requestBody);
+  }
+
   const menu = (
     <Menu onClick={handleMenuClick} color={"black"}>
       <Menu.Item key="1">Send and Download</Menu.Item>
@@ -74,6 +84,7 @@ const Request: React.FC = () => {
           type="primary"
           overlay={menu}
           icon={<DownOutlined/>}
+          onClick={handleSendClick}
         >Send</Dropdown.Button>
       </Col>
     </Row>
