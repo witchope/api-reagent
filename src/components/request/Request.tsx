@@ -27,6 +27,7 @@ export type ParameterType = "none" | "form-data" | "x-www-form-urlencoded" | "js
 
 export type RequestBody = {
   method: "GET" | "POST";
+  concatUrl: string,
   url: string;
   urlParameters: UrlParameter[];
   headers: RequestHeader[];
@@ -50,6 +51,7 @@ const selectBefore = (
 const Request: React.FC = () => {
   const [requestBody, setRequestBody] = useState<RequestBody>({
     method: "GET",
+    concatUrl: "",
     url: "",
     urlParameters: [],
     headers: [],
@@ -66,6 +68,25 @@ const Request: React.FC = () => {
     console.log('click', requestBody);
   }
 
+  function handleRequestBody(reqBody: RequestBody) {
+    setRequestBody({...reqBody})
+  }
+
+  function concatParam() {
+    return requestBody.urlParameters
+      .filter(x => x.name !== '')
+      .map(x => (`${x.name}=${x.value}`))
+      .reduce((acc, next, i) => i === 0 ? `${acc}${next}` : `${acc}&${next}`, '?');
+  }
+
+  function changeUrl(event: any) {
+    debugger;
+    let targetUrl: string = event.target.value;
+    // let url = targetUrl.split('?')[0];
+    setRequestBody({...requestBody, url: targetUrl})
+    // setRequestBody({...requestBody, concatUrl: concatParam() === '?' ? url : url + concatParam()})
+  }
+
   const menu = (
     <Menu onClick={handleMenuClick} color={"black"}>
       <Menu.Item key="1">Send and Download</Menu.Item>
@@ -75,7 +96,14 @@ const Request: React.FC = () => {
   return <div>
     <Row gutter={8}>
       <Col span={21}>
-        <Input addonBefore={selectBefore} size="large" placeholder={"Enter request URL"}/>
+        <Input
+          style={{fontFamily: 'monospace'}}
+          addonBefore={selectBefore}
+          size="large"
+          value={requestBody.url}
+          onInput={changeUrl}
+          placeholder={"Enter request URL"}
+        />
       </Col>
       <Col span={1}>
         <Dropdown.Button
@@ -90,7 +118,7 @@ const Request: React.FC = () => {
     </Row>
     <Row gutter={8}>
       <Col span={24}>
-        <ParamTab requestBody={requestBody} setRequestBody={setRequestBody}/>
+        <ParamTab requestBody={requestBody} setRequestBody={handleRequestBody}/>
       </Col>
     </Row>
     <Row gutter={8}>
