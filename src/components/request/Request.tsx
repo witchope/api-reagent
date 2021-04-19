@@ -36,12 +36,6 @@ export type RequestBody = {
   formParameters: FormParameter[],
 }
 
-const selectBefore = (
-  <Select defaultValue="GET" className={styles.selectBefore}>
-    <Option value="POST"><b>POST</b></Option>
-    <Option value="GET"><b>GET</b></Option>
-  </Select>
-);
 
 /**
  * API Request
@@ -71,6 +65,17 @@ const Request: React.FC = () => {
   function handleRequestBody(reqBody: RequestBody) {
     setRequestBody({...reqBody})
   }
+
+  function handleSelectorClick(value: any) {
+    setRequestBody({...requestBody, method: value})
+  }
+
+  const selectBefore = (
+    <Select defaultValue="GET" className={styles.selectBefore} onChange={handleSelectorClick}>
+      <Option value="POST"><b>POST</b></Option>
+      <Option value="GET"><b>GET</b></Option>
+    </Select>
+  );
 
   function concatParam() {
     return requestBody.urlParameters
